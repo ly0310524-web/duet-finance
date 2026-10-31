@@ -2,7 +2,7 @@ generator client {
   provider = "prisma-client-js"
 }
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 model Household {
@@ -33,12 +33,12 @@ model Transaction {
   kind         String @default("normal")
   category     String
   note         String
-  amount       Decimal @db.Decimal(20,2)
+  amount       Decimal
   currency     String @default("CNY")
-  rate         Decimal @db.Decimal(20,10)
-  cny          Decimal @db.Decimal(20,2)
+  rate         Decimal
+  cny          Decimal
   rateEstimated Boolean @default(false)
-  date         DateTime @db.Timestamptz(3)
+  date         DateTime
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   deletedAt    DateTime?
@@ -51,14 +51,14 @@ model Budget {
   household   Household @relation(fields:[householdId], references:[id])
   scope       String
   enabled     Boolean @default(false)
-  amount      Decimal @db.Decimal(20,2)
+  amount      Decimal
   @@unique([householdId,scope])
 }
 model ExchangeRate {
   id       String @id @default(cuid())
   date     String
   currency String
-  rate     Decimal @db.Decimal(20,10)
+  rate     Decimal
   estimated Boolean @default(false)
   @@unique([date,currency])
 }
