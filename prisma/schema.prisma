@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model Household {
+  id           String @id
+  users        User[]
+  transactions Transaction[]
+  budgets      Budget[]
+}
+model User {
+  id          String @id
+  lineId      String? @unique
+  name        String
+  householdId String
+  household   Household @relation(fields:[householdId], references:[id])
+  transactions Transaction[]
+  sessions    AuthSession[]
+  pending     PendingClarification?
+}
+model Transaction {
+  id           String @id @default(cuid())
+  householdId  String
+  household    Household @relation(fields:[householdId], references:[id])
+  userId       String
+  user         User @relation(fields:[userId], references:[id])
+  ledger       String
+  market       String?
+  direction    String
+  kind         String @default("normal")
+  category     String
+  note         String
+  amount       Decimal @db.Decimal(20,2)
+  currency     String @default("CNY")
+  rate         Decimal @db.Decimal(20,10)
+  cny          Decimal @db.Decimal(20,2)
+  rateEstimated Boolean @default(false)
+  date         DateTime @db.Timestamptz(3)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  deletedAt    DateTime?
+  version      Int @default(1)
+  @@index([householdId,date,deletedAt])
+}
+model Budget {
+  id          String @id @default(cuid())
+  householdId String
+  household   Household @relation(fields:[householdId], references:[id])
+  scope       String
+  enabled     Boolean @default(false)
+  amount      Decimal @db.Decimal(20,2)
+  @@unique([householdId,scope])
+}
+model ExchangeRate {
+  id       String @id @default(cuid())
+  date     String
+  currency String
+  rate     Decimal @db.Decimal(20,10)
+  estimated Boolean @default(false)
+  @@unique([date,currency])
+}
+model PendingClarification {
+  userId String @id
+  user User @relation(fields:[userId],references:[id])
+  message String
+  expiresAt DateTime
+}
+model AuditLog {
+  id String @id @default(cuid())
+  householdId String
+  userId String
+  transactionId String?
+  action String
+  before Json?
+  after Json?
+  createdAt DateTime @default(now())
+  @@index([householdId,createdAt])
+}
+model AuthSession {
+  id String @id
+  userId String
+  user User @relation(fields:[userId],references:[id])
+  expiresAt DateTime
+}
+model WebhookJob {
+  id String @id
+  payload Json
+  state String @default("pending")
+  attempts Int @default(0)
+  availableAt DateTime @default(now())
+  lockedAt DateTime?
+  replyState String @default("pending")
+  result String?
+  error String?
+  createdAt DateTime @default(now())
+}

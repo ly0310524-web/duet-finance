@@ -1,0 +1,1 @@
+import {requireUser,apiError} from '@/lib/auth';import {exchangeRate} from '@/lib/rates';export async function GET(req:Request){try{await requireUser();const c=new URL(req.url).searchParams.get('currency')||'CNY';const x=await exchangeRate(c,new Date());return Response.json({rate:Number(x.rate),estimated:x.estimated});}catch(e){return apiError(e);}}

@@ -1,0 +1,41 @@
+services:
+  - type: web
+    name: duet-finance
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npx prisma generate && npx prisma migrate deploy && npm run build
+    startCommand: npm run start:all
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DEV_AUTH_ENABLED
+        value: "false"
+      - key: LINE_PAIRING_ENABLED
+        value: "true"
+      - key: LINE_PAIRING_CODE
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: LINE_CHANNEL_ID
+        sync: false
+      - key: LINE_CHANNEL_SECRET
+        sync: false
+      - key: LINE_CHANNEL_ACCESS_TOKEN
+        sync: false
+      - key: LINE_ALLOWED_USER_IDS
+        value: ""
+      - key: LINE_LOGIN_CHANNEL_ID
+        sync: false
+      - key: LINE_LOGIN_CHANNEL_SECRET
+        sync: false
+      - key: AI_BASE_URL
+        value: https://api.openai.com/v1
+      - key: AI_API_KEY
+        sync: false
+      - key: AI_MODEL
+        value: gpt-4o-mini

@@ -1,0 +1,1 @@
+import {cookies} from 'next/headers';import {devMode} from '@/lib/db';import FinanceApp from '@/components/FinanceApp';export default async function Page(){const hasSession=!!(await cookies()).get('duet-session');return <FinanceApp initialSession={hasSession} development={devMode()}/>;}

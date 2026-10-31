@@ -1,0 +1,2 @@
+import {requireUser,checkOrigin,apiError} from '@/lib/auth';import {chat} from '@/lib/chat';import {queryReply,queryActions} from '@/lib/line';import {z} from 'zod';
+export async function POST(req:Request){try{checkOrigin(req);const user=await requireUser();const data=z.object({text:z.string().min(1).max(2000).optional(),action:z.enum(queryActions).optional()}).refine(v=>!!v.text!==!!v.action).parse(await req.json());return Response.json({reply:data.action?await queryReply(data.action):await chat(user.id,data.text!)});}catch(e){return apiError(e);}}

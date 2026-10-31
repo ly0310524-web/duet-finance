@@ -1,0 +1,3 @@
+import {requireUser,checkOrigin,apiError} from '@/lib/auth';import {addEntries,entrySchema,mutateEntry} from '@/lib/ledger';import {z} from 'zod';
+export async function POST(req:Request){try{checkOrigin(req);const user=await requireUser();return Response.json(await addEntries(user.id,[entrySchema.parse(await req.json())]));}catch(e){return apiError(e);}}
+export async function PATCH(req:Request){try{checkOrigin(req);const user=await requireUser();const input=z.object({id:z.string(),version:z.number().int().positive(),action:z.enum(['edit','delete','restore']),entry:z.any().optional()}).parse(await req.json());return Response.json(await mutateEntry(user.id,input.id,input.version,input.action,input.entry));}catch(e){return apiError(e);}}

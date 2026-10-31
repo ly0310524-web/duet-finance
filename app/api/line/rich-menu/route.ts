@@ -1,0 +1,1 @@
+import {NextResponse} from 'next/server';export async function GET(){return NextResponse.json({image:'/rich-menu.png',size:'2500x1686',actions:[['month_income','本月收入'],['month_expense','本月支出'],['month_balance','本月結餘'],['company','公司收支'],['savings','目前存款'],['dashboard','財務中控']]});}

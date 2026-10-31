@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: duet
+      POSTGRES_PASSWORD: duet_local_only
+      POSTGRES_DB: duet
+    ports: ["55432:5432"]
+    volumes: ["duet-db:/var/lib/postgresql/data"]
+  web:
+    build: .
+    env_file: .env.local
+    depends_on: [db]
+    ports: ["3000:3000"]
+  worker:
+    build: .
+    command: ["node","worker.js"]
+    env_file: .env.local
+    depends_on: [db]
+volumes:
+  duet-db:

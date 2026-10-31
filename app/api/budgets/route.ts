@@ -1,0 +1,2 @@
+import {requireUser,checkOrigin,apiError} from '@/lib/auth';import {db,HOUSEHOLD} from '@/lib/db';import {z} from 'zod';
+export async function POST(req:Request){try{checkOrigin(req);await requireUser();const input=z.object({scope:z.enum(['shared','member-1','member-2']),enabled:z.boolean(),amount:z.coerce.number().positive().max(1e12)}).parse(await req.json());return Response.json(await db.budget.upsert({where:{householdId_scope:{householdId:HOUSEHOLD,scope:input.scope}},create:{householdId:HOUSEHOLD,...input},update:input}));}catch(e){return apiError(e);}}

@@ -1,0 +1,5 @@
+import sharp from 'sharp';
+const W=2500,H=1686,cellW=W/3,cellH=H/2;
+const labels=['本月收入','本月支出','本月結餘','公司收支','目前存款','財務中控'];
+const svg=`<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#F7F6F2"/>${labels.map((label,i)=>{const x=(i%3)*cellW,y=Math.floor(i/3)*cellH,fill=i===5?'#C8AD7F':'#F7F6F2';return `<rect x="${x+2}" y="${y+2}" width="${cellW-4}" height="${cellH-4}" rx="28" fill="${fill}" stroke="#E5E6DF" stroke-width="2"/><circle cx="${x+cellW/2}" cy="${y+cellH*.36}" r="30" fill="none" stroke="#173D39" stroke-width="5"/><text x="${x+cellW/2}" y="${y+cellH*.68}" fill="#173D39" font-family="Noto Sans TC, sans-serif" font-size="54" text-anchor="middle">${label}</text><text x="${x+cellW/2}" y="${y+cellH*.77}" fill="#6D7B73" font-family="Manrope, sans-serif" font-size="21" letter-spacing="4" text-anchor="middle">DUET</text>`}).join('')}</svg>`;
+(async()=>{await sharp(Buffer.from(svg)).png().toFile('public/rich-menu.png');console.log('Generated public/rich-menu.png')})();
