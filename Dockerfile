@@ -1,4 +1,5 @@
 FROM node:22-alpine AS deps
+RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
@@ -9,6 +10,7 @@ COPY . .
 ENV DATABASE_URL=file:/app/data.db
 RUN npx prisma generate && npm run build
 FROM node:22-alpine
+RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 ENV NODE_ENV=production
 ENV DATABASE_URL=file:/app/data.db
