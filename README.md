@@ -21,7 +21,9 @@ npm run dev
 
 `.env.local` 填入 `LINE_CHANNEL_SECRET`、`LINE_CHANNEL_ACCESS_TOKEN`、兩位 `LINE_ALLOWED_USER_IDS`、LINE Login Channel ID／Secret、公開 `APP_URL`。Messaging API Webhook 設為 `https://你的網域/api/line/webhook`，啟動 `npm run worker`，再執行 `npm run rich-menu:deploy`。部署需要 HTTPS；Rich Menu 圖片為 `public/rich-menu.png`（2500×1686）。第六格開啟 `APP_URL`，前五格是唯讀 Postback 查詢。
 
-正式環境必須設 `DEV_AUTH_ENABLED=false`，提供 HTTPS、PostgreSQL、SESSION_SECRET 與 AI API Key。LINE Reply Token 超時時，worker 不會重播舊 token 或偷偷寫入；原始事件及失敗狀態保留於 `WebhookJob`。
+正式環境必須設 `DEV_AUTH_ENABLED=false`，提供 HTTPS、持久 PostgreSQL、SESSION_SECRET 與 AI API Key。不要在正式環境使用容器內 `file:/app/data.db`：Render 更新會替換容器，SQLite 檔案中的 LINE `lineId`、交易與綁定資料會一起消失，造成必須重新配對。LINE Reply Token 超時時，worker 不會重播舊 token 或偷偷寫入；原始事件及失敗狀態保留於 `WebhookJob`。
+
+匯率使用免費的 `open.er-api.com`，可透過 `EXCHANGE_RATE_URL=https://open.er-api.com/v6/latest/{currency}` 設定。未寫幣別時固定記錄 CNY；訊息寫「台幣／TWD／新台幣」時記錄 TWD，換算成 CNY 後在中控選擇 TWD 顯示。每日匯率會寫入 `ExchangeRate` 快取，服務暫時無法連線時會沿用最近一次成功匯率並標示估算。
 
 ## 核心規則
 
@@ -43,7 +45,7 @@ npm run build
 
 ## 8888 綁定
 
-當 `LINE_PAIRING_ENABLED=true` 且 `LINE_PAIRING_CODE=8888` 時，未綁定的 LINE 帳號傳送單獨一則 `8888`，系統會把它綁定到下一個空缺成員名額；第三個帳號會收到名額已滿。正式使用後請改用更難猜的碼並重新部署環境變數。
+當 `LINE_PAIRING_ENABLED=true` 且 `LINE_PAIRING_CODES=member-1:8888,member-2:9999` 時，Stanley 傳送 `8888`、Davina 傳送 `9999` 完成一次性綁定。綁定寫入 PostgreSQL 後會跨部署保留；同一名額若已有 LINE ID，新的帳號不能覆蓋它。
 
 目前本機測試 HTTPS Webhook URL：
 `https://petite-turkeys-switch.loca.lt/api/line/webhook`

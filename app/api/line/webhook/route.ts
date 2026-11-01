@@ -1,4 +1,4 @@
-import {lineUser} from '@/lib/db';
+import {lineUser,pairingMemberForCode} from '@/lib/db';
 import {chat} from '@/lib/chat';
 import {pairingReply,queryFlexReply,queryReply,sendReply,verifyLineSignature} from '@/lib/line';
 
@@ -14,7 +14,7 @@ export async function POST(req:Request){
       if(!event?.source?.userId||!event.replyToken)continue;
       let result:string|object|undefined;
       const user=await lineUser(event.source.userId);
-      if(event.type==='message'&&event.message?.type==='text'&&!user&&event.message.text.trim()===(process.env.LINE_PAIRING_CODE||'')){
+      if(event.type==='message'&&event.message?.type==='text'&&!user&&pairingMemberForCode(event.message.text.trim())){
         result=await pairingReply(event);
       }else if(!user){
         result='此 LINE 帳號尚未授權，請先傳送配對碼。';

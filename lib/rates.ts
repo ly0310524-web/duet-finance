@@ -1,6 +1,8 @@
 import Decimal from 'decimal.js';import {db} from './db';import {localDate} from './time';
 export const currencies=['CNY','TWD','GBP','USD','EUR'] as const;
+export function displayRateFromCny(currency:string,foreignToCny:number){return currency==='CNY'?1:1/foreignToCny;}
 export async function exchangeRate(currency:string,date:Date){if(currency==='CNY')return {rate:new Decimal(1),estimated:false};if(!(currencies as readonly string[]).includes(currency))throw new Error('不支援的幣別');const day=localDate(date);const cache=await db.exchangeRate.findUnique({where:{date_currency:{date:day,currency}}});if(cache)return {rate:new Decimal(cache.rate.toString()),estimated:cache.estimated};
- const endpoints=currency==='TWD'?[`https://open.er-api.com/v6/latest/TWD`]:[`https://api.frankfurter.dev/v1/${day}?base=${currency}&symbols=CNY`,`https://open.er-api.com/v6/latest/${currency}`];
+ const configured=(process.env.EXCHANGE_RATE_URL||'https://open.er-api.com/v6/latest/{currency}').replace('{currency}',currency);
+ const endpoints=currency==='TWD'?[configured,`https://open.er-api.com/v6/latest/TWD`]:[`https://api.frankfurter.dev/v1/${day}?base=${currency}&symbols=CNY`,configured,`https://open.er-api.com/v6/latest/${currency}`];
  for(let i=0;i<endpoints.length;i++){try{const response=await fetch(endpoints[i],{signal:AbortSignal.timeout(7000)});if(!response.ok)continue;const data=await response.json();const raw=data.rates?.CNY;if(!raw||!Number.isFinite(Number(raw))||Number(raw)<=0)continue;const rate=new Decimal(raw);const estimated=i>0||currency==='TWD';await db.exchangeRate.upsert({where:{date_currency:{date:day,currency}},create:{date:day,currency,rate:rate.toString(),estimated},update:{}});return {rate,estimated};}catch{}}
  const old=await db.exchangeRate.findFirst({where:{currency},orderBy:{date:'desc'}});if(old)return {rate:new Decimal(old.rate.toString()),estimated:true};throw new Error('無法取得匯率，尚未寫入，請稍後重試');}

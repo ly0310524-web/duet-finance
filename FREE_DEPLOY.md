@@ -1,6 +1,6 @@
 # 免費固定網址部署
 
-Render Free 可以提供固定的 `onrender.com` 網址；本專案的網站與 LINE worker 已合併在同一個免費 Web Service。Render 目前沒有適合這個專案的免費 PostgreSQL。請先建立 Neon 或 Supabase 免費 PostgreSQL，取得 `DATABASE_URL`，再用 Render Blueprint 部署 `render.yaml`。
+Render Free 可以提供固定的 `onrender.com` 網址；本專案的網站與 LINE worker 已合併在同一個免費 Web Service。請先建立 Neon 或 Supabase 免費 PostgreSQL，取得 `DATABASE_URL`，再用 Render Blueprint 部署 `render.yaml`。這一步是永久配對的必要條件；Render Web Service 的本機檔案在更新時會被替換，不能拿來保存 LINE 綁定或帳本。
 
 部署順序：
 
