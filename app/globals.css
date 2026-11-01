@@ -18,6 +18,19 @@
  .ledger-strip{grid-template-columns:repeat(3,minmax(0,1fr));padding:14px 10px}.ledger-strip>div{padding:4px 10px;min-width:0}.ledger-strip>div+div{border-left:1px solid var(--line)}.ledger-strip>div:last-child{border-right:0}.ledger-strip span{font-size:11px;white-space:nowrap}.ledger-strip strong{font-size:18px;white-space:nowrap}
  .modal-backdrop{align-items:flex-start;padding:12px}.entry-modal{width:100%;max-height:calc(100dvh - 24px);padding:20px 16px}.entry-modal header{position:sticky;top:-20px;background:var(--paper);z-index:1;padding-bottom:12px}.entry-modal footer{position:sticky;bottom:-20px;background:var(--paper);padding-top:12px}
 }
+
+.market-card{min-width:0}.market-primary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:24px 0 20px}.market-primary>div{min-width:0}.market-primary>div+div{border-left:1px solid var(--line);padding-left:16px}.market-primary span,.market-result>span{display:block;color:var(--muted);font-size:11px}.market-primary strong{display:block;font:500 21px Manrope, sans-serif;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.market-result{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding-top:13px}.market-result>span{display:flex;gap:7px;align-items:baseline}.market-result strong{font:500 12px Manrope, sans-serif;color:var(--forest-2)}.market-result .loss{color:var(--coral)}
+@media(max-width:900px){
+ .main-shell main{overflow-x:clip;overflow-y:visible;padding-bottom:calc(150px + env(safe-area-inset-bottom))}
+ .settings-layout{padding-bottom:34px}
+ .entry-modal{height:calc(var(--dialog-height,100dvh) - 24px);max-height:none;display:flex;flex-direction:column;overflow:hidden}
+ .entry-modal>header{flex:none;position:static;padding-bottom:4px}
+ .entry-modal form{display:flex;flex:1;min-height:0;flex-direction:column;margin-top:8px}
+ .entry-modal .form-grid{display:grid;grid-template-columns:minmax(0,1fr);flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:3px 2px 12px}
+ .entry-modal .date-field,.entry-modal .date-field input{width:100%;min-width:0;max-width:100%}
+ .entry-modal .date-field input{font-size:16px;padding-left:10px;padding-right:10px}
+ .entry-modal form>footer{position:static;flex:none;padding-top:12px;margin-top:8px}
+}
 @media(max-width:430px){.balance-label>span:last-child{max-width:48vw}.headline-metrics strong{font-size:20px}.ledger-strip>div{padding:4px 6px}.ledger-strip span{font-size:10px}.ledger-strip strong{font-size:16px}.entry-modal{padding-left:14px;padding-right:14px}}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .overview-top{grid-template-columns:minmax(0,1.42fr) minmax(0,.75fr)}.chart-grid{grid-template-columns:minmax(0,1.35fr) minmax(0,.82fr)}.brand{font-size:18px}.entry-modal{max-height:calc(var(--dialog-height,100dvh) - 32px)}
@@ -25,5 +38,5 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
  .overview-top,.chart-grid,.richmenu-layout,.settings-block{grid-template-columns:minmax(0,1fr)}
  input,select,textarea,.form-grid input,.form-grid select,.month-picker input,.table-filters select,.top-actions select,.search-field input,.chat-compose input{font-size:16px}
  .page-heading>div:first-child{min-width:0}.heading-actions{flex-shrink:0}.filter-bar{flex-wrap:wrap;overflow:visible;gap:8px}.month-picker{min-width:0;max-width:100%}.month-picker input{min-width:0;max-width:165px}.balance-comparison{flex-wrap:wrap;row-gap:5px}
- .entry-modal{max-height:calc(var(--dialog-height,100dvh) - 24px)}.form-grid label,.form-grid input,.form-grid select{min-width:0;width:100%}.entry-modal footer{bottom:-20px}.transaction-identity{min-width:0}.transaction-identity>div{min-width:0}.transaction-icon{flex-shrink:0}.transaction-identity small{max-width:100%}.mobile-nav{height:calc(66px + env(safe-area-inset-bottom))}.main-shell main{padding-bottom:calc(88px + env(safe-area-inset-bottom))}.chat-drawer{height:100dvh}.chat-compose input{min-width:0}.balance-split{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 28px}
+ .entry-modal{max-height:calc(var(--dialog-height,100dvh) - 24px)}.form-grid label,.form-grid input,.form-grid select{min-width:0;width:100%}.entry-modal footer{bottom:-20px}.transaction-identity{min-width:0}.transaction-identity>div{min-width:0}.transaction-icon{flex-shrink:0}.transaction-identity small{max-width:100%}.mobile-nav{height:calc(66px + env(safe-area-inset-bottom))}.main-shell main{overflow-x:clip;overflow-y:visible;padding-bottom:calc(150px + env(safe-area-inset-bottom))}.chat-drawer{height:100dvh}.chat-compose input{min-width:0}.balance-split{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 28px}
 }
